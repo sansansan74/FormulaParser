@@ -16,13 +16,13 @@ public:
         lexer_ = std::make_unique<Lexer>(expression);
         lexer_->NextToken();
 
-        if (lexer_->GetToken().GetType() == TokenType::End) {
+        if (GetTokenType() == TokenType::End) {
             throw ParseFormulaException("Expression is empty.", 0);
         }
 
         auto tree = ParseExpression();
 
-        if (lexer_->GetToken().GetType() != TokenType::End) {
+        if (GetTokenType() != TokenType::End) {
             throw ParseFormulaException("Unexpected token '" + lexer_->GetToken().GetValue() + "' at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
         }
 
@@ -41,7 +41,7 @@ private:
         auto term = ParseMult();
         AddExpressionToList(plusList, minusList, unaryOperation, std::move(term));
 
-        while (lexer_->GetToken().GetType() == TokenType::Operation &&
+        while (GetTokenType() == TokenType::Operation &&
             (lexer_->GetToken().GetValue() == "+" || lexer_->GetToken().GetValue() == "-")) {
             auto operation = lexer_->GetToken();
             lexer_->NextToken();
@@ -63,7 +63,7 @@ private:
     }
 
     Token GetUnaryOperation() {
-        if (lexer_->GetToken().GetType() == TokenType::Operation &&
+        if (GetTokenType() == TokenType::Operation &&
             (lexer_->GetToken().GetValue() == "+" || lexer_->GetToken().GetValue() == "-")) {
             auto operation = lexer_->GetToken();
             lexer_->NextToken();
@@ -121,7 +121,7 @@ private:
         auto tree = ParseFactor();
         multItems.push_back(std::move(tree));
 
-        while (lexer_->GetToken().GetType() == TokenType::Operation &&
+        while (GetTokenType() == TokenType::Operation &&
             (lexer_->GetToken().GetValue() == "*" || lexer_->GetToken().GetValue() == "/")) {
             auto op = lexer_->GetToken();
             lexer_->NextToken();
@@ -143,19 +143,23 @@ private:
         return CheckMultWithOneOperand(std::move(multItems));
     }
 
+    TokenType GetTokenType() const {
+        return lexer_ -> GetToken().GetType();
+    }
+
     std::unique_ptr<TreeItem> ParseFactor() {
         // simple number 5 or 2.45
-        if (lexer_->GetToken().GetType() == TokenType::Numeric) {
+        if (GetTokenType() == TokenType::Numeric) {
             auto leaf = std::make_unique<TreeLeaf>(std::stod(lexer_->GetToken().GetValue()));
             lexer_->NextToken();
             return leaf;
         }
 
         // ( expression )
-        if (lexer_->GetToken().GetType() == TokenType::Special && lexer_->GetToken().GetValue() == "(") {
+        if (GetTokenType() == TokenType::Special && lexer_->GetToken().GetValue() == "(") {
             lexer_->NextToken();
             auto expr = ParseExpression();
-            if (lexer_->GetToken().GetType() != TokenType::Special || lexer_->GetToken().GetValue() != ")") {
+            if (GetTokenType() != TokenType::Special || lexer_->GetToken().GetValue() != ")") {
                 throw ParseFormulaException("Expected ')' at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
             }
             lexer_->NextToken();
@@ -165,27 +169,27 @@ private:
         // parse function
         // function_without_args ()
         // function_with_args ( arg1, arg2, ... )
-        if (lexer_->GetToken().GetType() == TokenType::Identifier) {
+        if (GetTokenType() == TokenType::Identifier) {
             auto functionName = lexer_->GetToken().GetValue();
             
             lexer_->NextToken();
-            if (lexer_->GetToken().GetType() != TokenType::Special || lexer_->GetToken().GetValue() != "(") {
+            if (GetTokenType() != TokenType::Special || lexer_->GetToken().GetValue() != "(") {
                 throw ParseFormulaException("Expected '(' after function name at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
             }
             lexer_->NextToken();
             auto function = std::make_unique<TreeOperation>(functionName);
 
             // read function params
-            while (lexer_->GetToken().GetType() != TokenType::Special || lexer_->GetToken().GetValue() != ")") {
+            while (GetTokenType() != TokenType::Special || lexer_->GetToken().GetValue() != ")") {
                 auto arg = ParseExpression();
                 function->GetItems().push_back(std::move(arg));
-                if (lexer_->GetToken().GetType() == TokenType::Special && lexer_->GetToken().GetValue() == ",") {
+                if (GetTokenType() == TokenType::Special && lexer_->GetToken().GetValue() == ",") {
                     lexer_->NextToken();
                     continue;
                 }
             }
 
-            if (lexer_->GetToken().GetType() != TokenType::Special || lexer_->GetToken().GetValue() != ")") {
+            if (GetTokenType() != TokenType::Special || lexer_->GetToken().GetValue() != ")") {
                 throw ParseFormulaException("Expected ')' at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
             }
 

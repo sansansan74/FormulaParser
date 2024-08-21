@@ -11,7 +11,7 @@
 #include "ExpressionEvaluator.h"
 #include "FormulaParser.h"
 
-class ConsoleCalculator {
+static class ConsoleCalculator {
 public:
 	static void Calculate() {
 		PrintInputPrompt();
