@@ -23,14 +23,14 @@ public:
         auto tree = ParseExpression();
 
         if (GetTokenType() != TokenType::End) {
-            throw ParseFormulaException("Unexpected token '" + lexer_->GetToken().GetValue() + "' at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
+            throw ParseFormulaException("Unexpected token '" + GetTokenValue() + "' at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
         }
 
         return tree;
     }
 
 private:
-    std::unique_ptr<Lexer> lexer_;
+    std::unique_ptr<Lexer> lexer_{};
 
     std::unique_ptr<TreeItem> ParseExpression() {
         std::vector<std::unique_ptr<TreeItem>> plusList;
@@ -41,8 +41,7 @@ private:
         auto term = ParseMult();
         AddExpressionToList(plusList, minusList, unaryOperation, std::move(term));
 
-        while (GetTokenType() == TokenType::Operation &&
-            (lexer_->GetToken().GetValue() == "+" || lexer_->GetToken().GetValue() == "-")) {
+        while (isAddOrMinisToken()) {
             auto operation = lexer_->GetToken();
             lexer_->NextToken();
             term = ParseMult();
@@ -62,9 +61,14 @@ private:
         return std::make_unique<TreeOperation>("Subtract", CreateZero(), CheckSumWithOneOperand(std::move(minusList)));
     }
 
+    bool isAddOrMinisToken() const
+    {
+        return GetTokenType() == TokenType::Operation && (GetTokenValue() == "+" || GetTokenValue() == "-");
+    }
+
     Token GetUnaryOperation() {
         if (GetTokenType() == TokenType::Operation &&
-            (lexer_->GetToken().GetValue() == "+" || lexer_->GetToken().GetValue() == "-")) {
+            (GetTokenValue() == "+" || GetTokenValue() == "-")) {
             auto operation = lexer_->GetToken();
             lexer_->NextToken();
             return operation;
@@ -75,32 +79,32 @@ private:
     static void AddExpressionToList(std::vector<std::unique_ptr<TreeItem>>& plusList,
         std::vector<std::unique_ptr<TreeItem>>& minusList,
         const Token& operation,
-        std::unique_ptr<TreeItem> right) {
+        std::unique_ptr<TreeItem> treeItem) {
         if (operation.GetValue() == "+") {
-            plusList.push_back(std::move(right));
+            plusList.push_back(std::move(treeItem));
             return;
         }
 
-        if (auto leaf = dynamic_cast<TreeLeaf*>(right.get())) {
+        if (auto leaf = dynamic_cast<TreeLeaf*>(treeItem.get())) {
             plusList.push_back(std::make_unique<TreeLeaf>(-leaf->GetValue()));
             return;
         }
 
-        minusList.push_back(std::move(right));
+        minusList.push_back(std::move(treeItem));
     }
 
-    static std::unique_ptr<TreeItem> CheckSumWithOneOperand(std::vector<std::unique_ptr<TreeItem>> plusItems) {
-        if (plusItems.size() == 1) {
-            return std::move(plusItems[0]);
+    static std::unique_ptr<TreeItem> CheckSumWithOneOperand(std::vector<std::unique_ptr<TreeItem>> items) {
+        if (items.size() == 1) {
+            return std::move(items[0]);
         }
-        return std::make_unique<TreeOperation>("Add", std::move(plusItems));
+        return std::make_unique<TreeOperation>("Add", std::move(items));
     }
 
-    static std::unique_ptr<TreeItem> CheckMultWithOneOperand(std::vector<std::unique_ptr<TreeItem>> multItems) {
-        if (multItems.size() == 1) {
-            return std::move(multItems[0]);
+    static std::unique_ptr<TreeItem> CheckMultWithOneOperand(std::vector<std::unique_ptr<TreeItem>> items) {
+        if (items.size() == 1) {
+            return std::move(items[0]);
         }
-        return std::make_unique<TreeOperation>("Mult", std::move(multItems));
+        return std::make_unique<TreeOperation>("Mult", std::move(items));
     }
 
     static std::unique_ptr<TreeItem> CheckOperationWithOneOperand(std::vector<std::unique_ptr<TreeItem>> items, const std::string& op) {
@@ -121,8 +125,7 @@ private:
         auto tree = ParseFactor();
         multItems.push_back(std::move(tree));
 
-        while (GetTokenType() == TokenType::Operation &&
-            (lexer_->GetToken().GetValue() == "*" || lexer_->GetToken().GetValue() == "/")) {
+        while (isMultOrDivToken()) {
             auto op = lexer_->GetToken();
             lexer_->NextToken();
             tree = ParseFactor();
@@ -135,7 +138,8 @@ private:
         }
 
         if (!divItems.empty()) {
-            return std::make_unique<TreeOperation>("Divide",
+            return std::make_unique<TreeOperation>(
+                "Divide",
                 CheckMultWithOneOperand(std::move(multItems)),
                 CheckMultWithOneOperand(std::move(divItems)));
         }
@@ -143,23 +147,32 @@ private:
         return CheckMultWithOneOperand(std::move(multItems));
     }
 
+    bool isMultOrDivToken() const
+    {
+        return GetTokenType() == TokenType::Operation && (GetTokenValue() == "*" || GetTokenValue() == "/");
+    }
+
     TokenType GetTokenType() const {
-        return lexer_ -> GetToken().GetType();
+        return lexer_->GetConstToken().GetType();
+    }
+
+    const std::string& GetTokenValue() const {
+        return lexer_->GetConstToken().GetValue();
     }
 
     std::unique_ptr<TreeItem> ParseFactor() {
         // simple number 5 or 2.45
         if (GetTokenType() == TokenType::Numeric) {
-            auto leaf = std::make_unique<TreeLeaf>(std::stod(lexer_->GetToken().GetValue()));
+            auto leaf = std::make_unique<TreeLeaf>(std::stod(GetTokenValue()));
             lexer_->NextToken();
             return leaf;
         }
 
         // ( expression )
-        if (GetTokenType() == TokenType::Special && lexer_->GetToken().GetValue() == "(") {
+        if (GetTokenType() == TokenType::Special && GetTokenValue() == "(") {
             lexer_->NextToken();
             auto expr = ParseExpression();
-            if (GetTokenType() != TokenType::Special || lexer_->GetToken().GetValue() != ")") {
+            if (GetTokenType() != TokenType::Special || GetTokenValue() != ")") {
                 throw ParseFormulaException("Expected ')' at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
             }
             lexer_->NextToken();
@@ -170,26 +183,26 @@ private:
         // function_without_args ()
         // function_with_args ( arg1, arg2, ... )
         if (GetTokenType() == TokenType::Identifier) {
-            auto functionName = lexer_->GetToken().GetValue();
-            
+            auto functionName = GetTokenValue();
+
             lexer_->NextToken();
-            if (GetTokenType() != TokenType::Special || lexer_->GetToken().GetValue() != "(") {
+            if (GetTokenType() != TokenType::Special || GetTokenValue() != "(") {
                 throw ParseFormulaException("Expected '(' after function name at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
             }
             lexer_->NextToken();
             auto function = std::make_unique<TreeOperation>(functionName);
 
             // read function params
-            while (GetTokenType() != TokenType::Special || lexer_->GetToken().GetValue() != ")") {
+            while (GetTokenType() != TokenType::Special || GetTokenValue() != ")") {
                 auto arg = ParseExpression();
                 function->GetItems().push_back(std::move(arg));
-                if (GetTokenType() == TokenType::Special && lexer_->GetToken().GetValue() == ",") {
+                if (GetTokenType() == TokenType::Special && GetTokenValue() == ",") {
                     lexer_->NextToken();
                     continue;
                 }
             }
 
-            if (GetTokenType() != TokenType::Special || lexer_->GetToken().GetValue() != ")") {
+            if (GetTokenType() != TokenType::Special || GetTokenValue() != ")") {
                 throw ParseFormulaException("Expected ')' at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
             }
 
@@ -200,7 +213,7 @@ private:
             return function;
         }
 
-        throw ParseFormulaException("Unexpected token '" + lexer_->GetToken().GetValue() + "' at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
+        throw ParseFormulaException("Unexpected token '" + GetTokenValue() + "' at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
     }
 
     void CheckFunction(const std::unique_ptr<TreeOperation>& treeOperation) {
@@ -234,8 +247,6 @@ private:
         throw ParseFormulaException("Unknown function " + treeOperation->GetOperation() + " at position " + std::to_string(lexer_->GetIndex()), lexer_->GetIndex());
     }
 
- 
-    
 };
 
 #endif // EXPRESSION_PARSER_H

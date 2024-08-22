@@ -21,6 +21,10 @@ public:
         return token_;
     }
 
+    const Token& GetConstToken() const {
+        return token_;
+    }
+
     void NextToken() {
         SkipWhitespace();
         if (Eof()) {
