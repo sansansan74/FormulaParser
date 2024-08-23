@@ -1,4 +1,6 @@
 #include "ExpressionParser.h"
+#include "FunctionNames.h"
+
 
 unique_ptr<TreeItem> ExpressionParser::Parse(const string& expression) {
     lexer_ = make_unique<Lexer>(expression);
@@ -34,16 +36,16 @@ unique_ptr<TreeItem> ExpressionParser::ParseExpression() {
     }
 
     if (!minusList.empty() && !plusList.empty()) {
-        return make_unique<TreeOperation>("subtract",
-            make_unique<TreeOperation>("add", move(plusList)),
-            make_unique<TreeOperation>("add", move(minusList)));
+        return make_unique<TreeOperation>(FUNCTION_SUBTRACT,
+            make_unique<TreeOperation>(FUNCTION_ADD, move(plusList)),
+            make_unique<TreeOperation>(FUNCTION_ADD, move(minusList)));
     }
 
     if (!plusList.empty()) {
         return CheckSumWithOneOperand(move(plusList));
     }
 
-    return make_unique<TreeOperation>("subtract", CreateZero(), CheckSumWithOneOperand(move(minusList)));
+    return make_unique<TreeOperation>(FUNCTION_SUBTRACT, CreateZero(), CheckSumWithOneOperand(move(minusList)));
 }
 
 Token ExpressionParser::GetUnaryOperation() {
@@ -91,7 +93,7 @@ unique_ptr<TreeItem> ExpressionParser::ParseMult() {
 
     if (!divItems.empty()) {
         return make_unique<TreeOperation>(
-            "divide",
+            FUNCTION_DIVIDE,
             CheckMultWithOneOperand(move(multItems)),
             CheckMultWithOneOperand(move(divItems)));
     }

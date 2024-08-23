@@ -8,9 +8,7 @@
 
 #include <memory>
 #include <vector>
-#include <stdexcept>
-#include <sstream>
-#include <algorithm>
+
 
 using namespace std;
 
@@ -39,14 +37,14 @@ private:
         if (items.size() == 1) {
             return move(items[0]);
         }
-        return make_unique<TreeOperation>("add", move(items));
+        return make_unique<TreeOperation>(FUNCTION_ADD, move(items));
     }
 
     static unique_ptr<TreeItem> CheckMultWithOneOperand(vector<unique_ptr<TreeItem>> items) {
         if (items.size() == 1) {
             return move(items[0]);
         }
-        return make_unique<TreeOperation>("mult", move(items));
+        return make_unique<TreeOperation>(FUNCTION_MULT, move(items));
     }
 
     static unique_ptr<TreeItem> CheckOperationWithOneOperand(vector<unique_ptr<TreeItem>> items, const string& op) {

@@ -6,12 +6,12 @@
 #include "FunctionDescriptor.h"
 
 #include <string>
-#include <vector>
+#include <map>
 
 using namespace std;
 
 class UserFunctions {
-	static vector<const FunctionDescriptor*> desc;
+	static map<string, const FunctionDescriptor*> desc;
 public:
 	static bool ContainFunctions(const string& name);
 

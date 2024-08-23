@@ -8,7 +8,7 @@
 
 class PowFunctionDescriptor : public FunctionDescriptor {
 public:
-	PowFunctionDescriptor() : FunctionDescriptor("pow", 2) {
+	PowFunctionDescriptor() : FunctionDescriptor(FUNCTION_POW, 2) {
 	}
 
 	virtual double Evaluate(const vector<unique_ptr<TreeItem>>& items) const override;

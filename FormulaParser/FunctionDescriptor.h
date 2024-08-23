@@ -4,6 +4,7 @@
 #define FUNCTIONDESCRIPTOR_H
 
 #include "TreeItem.h"
+#include "FunctionNames.h"
 #include <string>
 #include <vector>
 #include <memory>

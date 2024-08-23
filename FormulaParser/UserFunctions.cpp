@@ -15,48 +15,46 @@
 
 
 // Инициализация статического массива
-vector<const FunctionDescriptor*> UserFunctions::desc = {
-	new PiFunctionDescriptor(),
-	new AvgFunctionDescriptor(),
-	new PowFunctionDescriptor(),
-	new AddFunctionDescriptor(),
-	new SubtractFunctionDescriptor(),
-	new MultFunctionDescriptor(),
-	new DivideFunctionDescriptor()
+map<string, const FunctionDescriptor*> UserFunctions::desc = {
+	{ string(FUNCTION_PI), new PiFunctionDescriptor() },
+	{ string(FUNCTION_AVG), new AvgFunctionDescriptor() },
+	{ string(FUNCTION_POW), new PowFunctionDescriptor() },
+	{ string(FUNCTION_ADD), new AddFunctionDescriptor() },
+	{ string(FUNCTION_SUBTRACT), new SubtractFunctionDescriptor() },
+	{ string(FUNCTION_MULT), new MultFunctionDescriptor() },
+	{ string(FUNCTION_DIVIDE), new DivideFunctionDescriptor() }
 };
 
 bool UserFunctions::ContainFunctions(const string& name) {
-	auto it = find_if(begin(desc), end(desc),
-		[name](const FunctionDescriptor* func) {
-			return name == func->name;
-		});
-
-	// Возвращаем true, если элемент найден, иначе false
-	return it != end(desc);
+	try {
+		auto functionDescriptor = desc.at(name);
+		return true;
+	}
+	catch (const std::out_of_range& e) {
+		false;
+	}
 }
 
 string UserFunctions::CheckParamNumbers(const string& name, int paramCount) {
-	// todo change to map
-	for (const auto f : desc)
-	{
-		if (f->name == name) {
-			return f->CheckParamCount(name, paramCount);
-		}
+	try {
+		auto functionDescriptor = desc.at(name);
+		return functionDescriptor->CheckParamCount(name, paramCount);
+	}
+	catch (const std::out_of_range& e) {
+		throw EvaluateFormulaException("No such function " + name);
 	}
 
 	return "";
 }
 
 double UserFunctions::Evaluate(const string& name, const vector<unique_ptr<TreeItem>>& items) {
-	for (const auto f : desc)
-	{
-		if (f->name == name) {
-			return f->Evaluate(items);
-		}
+	try {
+		auto functionDescriptor = desc.at(name);
+		return functionDescriptor->Evaluate(items);
 	}
-
-	// todo Exceptions change to ParseException & EvaluateExceptions
-	throw EvaluateFormulaException("Нет такой функции");
+	catch (const std::out_of_range& e) {
+		throw EvaluateFormulaException("No such function " + name);
+	}
 }
 
 double UserFunctions::Evaluate(const unique_ptr<TreeItem>& item) {

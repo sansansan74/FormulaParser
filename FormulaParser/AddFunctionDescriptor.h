@@ -8,7 +8,7 @@
 
 class AddFunctionDescriptor : public FunctionDescriptor {
 public:
-	AddFunctionDescriptor() : FunctionDescriptor("add", -1) {
+	AddFunctionDescriptor() : FunctionDescriptor(FUNCTION_ADD, -1) {
 	}
 
 	virtual double Evaluate(const vector<unique_ptr<TreeItem>>& items) const override;

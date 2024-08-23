@@ -8,7 +8,7 @@
 
 class MultFunctionDescriptor : public FunctionDescriptor {
 public:
-	MultFunctionDescriptor() : FunctionDescriptor("mult", -1) {
+	MultFunctionDescriptor() : FunctionDescriptor(FUNCTION_MULT, -1) {
 	}
 
 	virtual double Evaluate(const vector<unique_ptr<TreeItem>>& items) const override;

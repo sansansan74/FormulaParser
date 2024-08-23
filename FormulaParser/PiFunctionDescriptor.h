@@ -7,7 +7,7 @@
 
 class PiFunctionDescriptor : public FunctionDescriptor {
 public:
-	PiFunctionDescriptor() : FunctionDescriptor("pi", 0) {
+	PiFunctionDescriptor() : FunctionDescriptor(FUNCTION_PI, 0) {
 	}
 
 	virtual double Evaluate(const vector<unique_ptr<TreeItem>>& items) const override;

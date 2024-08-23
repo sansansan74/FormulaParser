@@ -8,7 +8,7 @@
 
 class SubtractFunctionDescriptor : public FunctionDescriptor {
 public:
-	SubtractFunctionDescriptor() : FunctionDescriptor("subtract", -1) {
+	SubtractFunctionDescriptor() : FunctionDescriptor(FUNCTION_SUBTRACT, -1) {
 	}
 
 	virtual double Evaluate(const vector<unique_ptr<TreeItem>>& items) const override;
