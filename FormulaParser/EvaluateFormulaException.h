@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef EVALUATE_FORMULA_EXCEPTION_H
-#define EVALUATE_FORMULA_EXCEPTION_H
 
 #include <exception>
 #include <string>
@@ -14,4 +12,3 @@ public:
 private:
 };
 
-#endif // EVALUATE_FORMULA_EXCEPTION_H

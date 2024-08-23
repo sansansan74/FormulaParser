@@ -1,5 +1,8 @@
-#ifndef TREE_OPERATION_H
-#define TREE_OPERATION_H
+#pragma once
+
+/*
+`TreeOperation` - a tree node representing an expression.
+*/
 
 #include "TreeItem.h"
 #include <vector>
@@ -27,4 +30,3 @@ private:
 
 };
 
-#endif // TREE_OPERATION_H

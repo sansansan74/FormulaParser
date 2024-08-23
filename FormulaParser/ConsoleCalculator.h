@@ -1,5 +1,4 @@
-﻿#ifndef CONSOLE_CALCULATOR_H
-#define CONSOLE_CALCULATOR_H
+﻿#pragma once
 
 #include <string>
 #include "EvaluateFormulaException.h"
@@ -24,5 +23,3 @@ private:
 
 	static void PrintInputPrompt();
 };
-
-#endif // CONSOLE_CALCULATOR_H

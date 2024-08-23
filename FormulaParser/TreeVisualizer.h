@@ -1,5 +1,25 @@
-﻿#ifndef TREE_VISUALIZER_H
-#define TREE_VISUALIZER_H
+﻿#pragma once
+
+/*
+Converts the expression tree to a human-readable graphical tree drawn using pseudographics.
+For example:
+1+2 ==>
+`-- add
+    |-- 1
+    `-- 2
+
+
+(2+3)*(5-3)/2 ==>
+`-- divide
+    |-- mult
+    |   |-- add
+    |   |   |-- 2
+    |   |   `-- 3
+    |   `-- add
+    |       |-- 5
+    |       `-- -3
+    `-- 2
+*/
 
 #include "TreeItem.h"
 #include "TreeLeaf.h"
@@ -20,4 +40,3 @@ private:
     static void VisualizeHelper(const unique_ptr<TreeItem>& item, ostringstream& oss, const string& prefix, bool isTail);
 };
 
-#endif // TREE_VISUALIZER_H

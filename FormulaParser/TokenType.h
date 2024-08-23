@@ -1,5 +1,8 @@
-#ifndef TOKEN_TYPE_H
-#define TOKEN_TYPE_H
+#pragma once
+
+/*
+The enumeration contains the types of tokens that are returned by the `Lexer` parser.
+*/
 
 enum class TokenType {
     Operation,
@@ -9,4 +12,3 @@ enum class TokenType {
     End
 };
 
-#endif // TOKEN_TYPE_H

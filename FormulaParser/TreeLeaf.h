@@ -1,5 +1,8 @@
-#ifndef TREE_LEAF_H
-#define TREE_LEAF_H
+#pragma once
+
+/*
+`TreeLeaf` - a tree leaf that contains a numerical value.
+*/
 
 #include "TreeItem.h"
 #include <string>
@@ -20,4 +23,3 @@ private:
     double value_;
 };
 
-#endif // TREE_LEAF_H

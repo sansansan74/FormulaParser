@@ -1,6 +1,8 @@
 ﻿#pragma once
-#ifndef USERFUNCTIONS_H
-#define USERFUNCTIONS_H
+
+/*
+Contains descriptions of user-defined functions. To add a custom function, it needs to be registered in `FunctionDescriptor.cpp`.
+*/
 
 #include "TreeItem.h"
 #include "FunctionDescriptor.h"
@@ -17,12 +19,10 @@ public:
 
 	static string CheckParamNumbers(const string& name, int paramCount);
 
-	static double Evaluate(const string& name, const vector<unique_ptr<TreeItem>>&  items);
-
 	static double Evaluate(const unique_ptr<TreeItem>& item);
-	
+private:
+	static double EvaluateTreeItemValue(const string& name, const vector<unique_ptr<TreeItem>>& items);	
 };
 
-#endif // !USERFUNCTIONS_H
 
 

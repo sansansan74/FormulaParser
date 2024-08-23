@@ -1,5 +1,4 @@
-#ifndef TOKEN_H
-#define TOKEN_H
+#pragma once
 
 #include "TokenType.h"
 #include <string>
@@ -31,4 +30,3 @@ private:
     std::string TokenTypeToString(TokenType type) const;
 };
 
-#endif // TOKEN_H

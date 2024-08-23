@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#ifndef FUNCTIONDESCRIPTOR_H
-#define FUNCTIONDESCRIPTOR_H
 
 #include "TreeItem.h"
 #include "FunctionNames.h"
@@ -28,5 +26,3 @@ public:
 
 	virtual double Evaluate(const vector<unique_ptr<TreeItem>>& items) const = 0;
 };
-
-#endif

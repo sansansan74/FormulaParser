@@ -49,14 +49,3 @@ int main()
 	ConsoleCalculator::Calculate();
 }
 
-//using namespace std;
-//
-//int main()
-//{
-//	string s1 = "Alex";
-//	string s2 = "Kantor";
-//
-//	string fio = s1 + " " + s2;
-//	cout << fio << endl;
-//}
-

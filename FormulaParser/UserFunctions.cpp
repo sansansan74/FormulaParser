@@ -47,7 +47,7 @@ string UserFunctions::CheckParamNumbers(const string& name, int paramCount) {
 	return "";
 }
 
-double UserFunctions::Evaluate(const string& name, const vector<unique_ptr<TreeItem>>& items) {
+double UserFunctions::EvaluateTreeItemValue(const string& name, const vector<unique_ptr<TreeItem>>& items) {
 	try {
 		auto functionDescriptor = desc.at(name);
 		return functionDescriptor->Evaluate(items);
@@ -63,7 +63,8 @@ double UserFunctions::Evaluate(const unique_ptr<TreeItem>& item) {
 	}
 
 	if (TreeOperation* operation = dynamic_cast<TreeOperation*>(item.get())) {
-		return Evaluate(operation->GetOperation(), operation->GetItems());
+		return EvaluateTreeItemValue(operation->GetOperation(), operation->GetItems());
 	}
+
 	throw EvaluateFormulaException("Unknown TreeItem type");
 }

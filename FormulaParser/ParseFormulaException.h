@@ -1,5 +1,4 @@
-#ifndef PARSE_FORMULA_EXCEPTION_H
-#define PARSE_FORMULA_EXCEPTION_H
+#pragma once
 
 #include <exception>
 #include <string>
@@ -20,4 +19,3 @@ private:
     int position_;
 };
 
-#endif // PARSE_FORMULA_EXCEPTION_H

@@ -1,5 +1,4 @@
-#ifndef LEXER_H
-#define LEXER_H
+#pragma once
 
 #include "Token.h"
 #include "ParseFormulaException.h"
@@ -9,6 +8,13 @@
 #include <sstream>
 
 using namespace std;
+
+/*
+The Lexer class converts a set of characters into tokens.
+GetToken() method returns the next token. 
+If the input string contains errors, the method throws an exception 
+with a description of the error and its position in the string.
+*/
 
 class Lexer {
 public:
@@ -65,4 +71,3 @@ private:
     }
 };
 
-#endif // LEXER_H

@@ -1,5 +1,4 @@
-#ifndef EXPRESSION_PARSER_H
-#define EXPRESSION_PARSER_H
+#pragma once
 
 #include "Lexer.h"
 #include "TreeOperation.h"
@@ -9,6 +8,12 @@
 #include <memory>
 #include <vector>
 
+/*
+The `ExpressionParser` class performs the parsing of an expression. 
+The `Parse` method parses the expression and returns a tree representation of it. 
+To achieve this, it uses the recursive descent method. If the expression contains 
+syntax errors, the method will throw a `ParseFormulaException`.
+*/
 
 using namespace std;
 
@@ -94,5 +99,3 @@ private:
     }
 
 };
-
-#endif // EXPRESSION_PARSER_H

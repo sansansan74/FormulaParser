@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef PIFUNCTIONDESCRIPTOR_H
-#define PIFUNCTIONDESCRIPTOR_H
 
 #include "FunctionDescriptor.h"
 
@@ -13,5 +11,4 @@ public:
 	virtual double Evaluate(const vector<unique_ptr<TreeItem>>& items) const override;
 };
 
-#endif
 
