@@ -28,16 +28,7 @@ private:
     TokenType type_;
     std::string value_;
 
-    std::string TokenTypeToString(TokenType type) const {
-        switch (type) {
-        case TokenType::Operation: return "Operation";
-        case TokenType::Identifier: return "Identifier";
-        case TokenType::Special: return "Special";
-        case TokenType::Numeric: return "Numeric";
-        case TokenType::End: return "End";
-        default: return "Unknown";
-        }
-    }
+    std::string TokenTypeToString(TokenType type) const;
 };
 
 #endif // TOKEN_H

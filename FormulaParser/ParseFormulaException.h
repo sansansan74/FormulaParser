@@ -13,7 +13,7 @@ public:
         return msg_.c_str();
     }
 
-    int GetPosition() const { return position_; }
+    int GetPosition() const noexcept { return position_; }
 
 private:
     std::string msg_;

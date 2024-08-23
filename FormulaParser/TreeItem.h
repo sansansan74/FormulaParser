@@ -1,6 +1,8 @@
 #ifndef ITREEITEM_H
 #define ITREEITEM_H
 
+#include <string>
+
 class TreeItem {
 public:
     virtual std::string ToString() const = 0;

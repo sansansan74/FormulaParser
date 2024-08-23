@@ -7,36 +7,23 @@
 #include <algorithm>
 #include <sstream>
 
+using namespace std;
+
 class TreeOperation : public TreeItem {
 public:
-    TreeOperation(const std::string& operation, std::vector<std::unique_ptr<TreeItem>> items = {})
-        : operation_(operation), items_(std::move(items)) {}
+    TreeOperation(const string& operation, vector<unique_ptr<TreeItem>> items = {})
+        : operation_(operation), items_(move(items)) {}
 
-    TreeOperation(const std::string& operation, std::unique_ptr<TreeItem> op1, std::unique_ptr<TreeItem> op2)
-        : operation_(operation) {
-        items_.emplace_back(std::move(op1));
-        items_.emplace_back(std::move(op2));
-    }
+    TreeOperation(const string& operation, unique_ptr<TreeItem> op1, unique_ptr<TreeItem> op2);
 
-    virtual std::string ToString() const {
-        std::ostringstream oss;
-        oss << operation_ << "(";
-        for (size_t i = 0; i < items_.size(); ++i) {
-            oss << items_[i]->ToString();
-            if (i < items_.size() - 1) {
-                oss << ", ";
-            }
-        }
-        oss << ")";
-        return oss.str();
-    }
+    virtual string ToString() const;
 
-    std::vector<std::unique_ptr<TreeItem>>& const GetItems()  { return items_; }
-    std::string GetOperation() { return operation_; }
+    vector<unique_ptr<TreeItem>>& const GetItems()  { return items_; }
+    string GetOperation() { return operation_; }
 
 private:
-    std::string operation_;
-    std::vector<std::unique_ptr<TreeItem>> items_;
+    string operation_;
+    vector<unique_ptr<TreeItem>> items_;
 
 };
 
