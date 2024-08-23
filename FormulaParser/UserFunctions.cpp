@@ -15,19 +15,23 @@
 
 
 // Инициализация статического массива
-map<string, const FunctionDescriptor*> UserFunctions::desc = {
-	{ string(FUNCTION_PI), new PiFunctionDescriptor() },
-	{ string(FUNCTION_AVG), new AvgFunctionDescriptor() },
-	{ string(FUNCTION_POW), new PowFunctionDescriptor() },
+map<string, const FunctionDescriptor*> UserFunctions::functionDescriptors = {
+	// standart 4 functions: + - * /
 	{ string(FUNCTION_ADD), new AddFunctionDescriptor() },
 	{ string(FUNCTION_SUBTRACT), new SubtractFunctionDescriptor() },
 	{ string(FUNCTION_MULT), new MultFunctionDescriptor() },
-	{ string(FUNCTION_DIVIDE), new DivideFunctionDescriptor() }
+	{ string(FUNCTION_DIVIDE), new DivideFunctionDescriptor() },
+
+	// user functions
+	{ string(FUNCTION_PI), new PiFunctionDescriptor() },
+	{ string(FUNCTION_AVG), new AvgFunctionDescriptor() },
+	{ string(FUNCTION_POW), new PowFunctionDescriptor() },
+
 };
 
-bool UserFunctions::ContainFunctions(const string& name) {
+bool UserFunctions::isContainsFunctionByName(const string& functionName) {
 	try {
-		auto functionDescriptor = desc.at(name);
+		auto functionDescriptor = functionDescriptors.at(functionName);
 		return true;
 	}
 	catch (const std::out_of_range& e) {
@@ -35,34 +39,40 @@ bool UserFunctions::ContainFunctions(const string& name) {
 	}
 }
 
-string UserFunctions::CheckParamNumbers(const string& name, int paramCount) {
+/// <summary>
+/// Check number params in functions
+/// </summary>
+/// <param name="functionName">name of function</param>
+/// <param name="paramCount">fact param count</param>
+/// <returns>error message, if error occure</returns>
+string UserFunctions::CheckParamsCount(const string& functionName, int paramCount) {
 	try {
-		auto functionDescriptor = desc.at(name);
-		return functionDescriptor->CheckParamCount(name, paramCount);
+		auto functionDescriptor = functionDescriptors.at(functionName);
+		return functionDescriptor->CheckParamCount(functionName, paramCount);
 	}
 	catch (const std::out_of_range& e) {
-		throw EvaluateFormulaException("No such function " + name);
+		throw EvaluateFormulaException("No such function " + functionName);
 	}
 
 	return "";
 }
 
-double UserFunctions::EvaluateTreeItemValue(const string& name, const vector<unique_ptr<TreeItem>>& items) {
+double UserFunctions::EvaluateTreeItemValue(const string& functionName, const vector<unique_ptr<TreeItem>>& params) {
 	try {
-		auto functionDescriptor = desc.at(name);
-		return functionDescriptor->Evaluate(items);
+		auto functionDescriptor = functionDescriptors.at(functionName);
+		return functionDescriptor->Evaluate(params);
 	}
 	catch (const std::out_of_range& e) {
-		throw EvaluateFormulaException("No such function " + name);
+		throw EvaluateFormulaException("No such function " + functionName);
 	}
 }
 
-double UserFunctions::Evaluate(const unique_ptr<TreeItem>& item) {
-	if (const TreeLeaf* leaf = dynamic_cast<const TreeLeaf*>(item.get())) {
+double UserFunctions::Evaluate(const unique_ptr<TreeItem>& treeItem) {
+	if (const TreeLeaf* leaf = dynamic_cast<const TreeLeaf*>(treeItem.get())) {
 		return leaf->GetValue();
 	}
 
-	if (TreeOperation* operation = dynamic_cast<TreeOperation*>(item.get())) {
+	if (TreeOperation* operation = dynamic_cast<TreeOperation*>(treeItem.get())) {
 		return EvaluateTreeItemValue(operation->GetOperation(), operation->GetItems());
 	}
 

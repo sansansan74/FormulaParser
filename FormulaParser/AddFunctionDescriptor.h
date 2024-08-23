@@ -2,6 +2,10 @@
 #pragma once
 
 
+/*
+Implements the addition operation.
+*/
+
 #include "FunctionDescriptor.h"
 
 class AddFunctionDescriptor : public FunctionDescriptor {

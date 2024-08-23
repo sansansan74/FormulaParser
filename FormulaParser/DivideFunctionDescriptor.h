@@ -1,6 +1,10 @@
 
 #pragma once
 
+/*
+Implements the division operation.
+*/
+
 #include "FunctionDescriptor.h"
 
 class DivideFunctionDescriptor : public FunctionDescriptor {

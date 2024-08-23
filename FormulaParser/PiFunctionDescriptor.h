@@ -1,5 +1,8 @@
 #pragma once
 
+/*
+Implements PI = 3.14159 .
+*/
 
 #include "FunctionDescriptor.h"
 

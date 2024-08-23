@@ -1,6 +1,10 @@
 
 #pragma once
 
+/*
+Implements the subtraction operation.
+*/
+
 #include "FunctionDescriptor.h"
 
 class SubtractFunctionDescriptor : public FunctionDescriptor {

@@ -1,5 +1,9 @@
 #pragma once
 
+/*
+Implements the operation of calculating the average with an arbitrary positive number of parameters.
+*/
+
 #include "FunctionDescriptor.h"
 
 class AvgFunctionDescriptor : public FunctionDescriptor {

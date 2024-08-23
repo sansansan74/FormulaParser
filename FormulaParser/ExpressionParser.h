@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Lexer.h"
 #include "TreeOperation.h"
@@ -13,6 +13,20 @@ The `ExpressionParser` class performs the parsing of an expression.
 The `Parse` method parses the expression and returns a tree representation of it. 
 To achieve this, it uses the recursive descent method. If the expression contains 
 syntax errors, the method will throw a `ParseFormulaException`.
+
+Грамматика парсера в формулах Бэкуса-науэра:
+
+expr ::= [+|-] sum | (expr)
+sum ::= mult {+|- mult}
+mult ::= item {*|/ item}
+item ::= double | func
+double ::= intNumber | doubleNumber
+func ::= funcName ( expr_list )
+expr_list ::= | expr {, expr}
+funcName ::= avg | pow | pi
+Где:
+[] - означает, что содержиемое есть, или нет
+{} - содержимое может повторяться 0 или более раз
 */
 
 using namespace std;
@@ -81,13 +95,13 @@ private:
     unique_ptr<TreeItem> ParseFactor();
 
     void CheckFunctionName(const std::string& functionName) {
-        if (!UserFunctions::ContainFunctions(functionName))
+        if (!UserFunctions::isContainsFunctionByName(functionName))
             CreateParseFormulaException("Unexpected funcions '" + functionName + "'");
     }
     
 
     void CheckFunctionParamNumbers(const unique_ptr<TreeOperation>& treeOperation) {
-        auto errorMessage = UserFunctions::CheckParamNumbers(treeOperation->GetOperation(), treeOperation->GetItems().size());
+        auto errorMessage = UserFunctions::CheckParamsCount(treeOperation->GetOperation(), treeOperation->GetItems().size());
         if (!errorMessage.empty())
         {
             CreateParseFormulaException("Function " + treeOperation->GetOperation() + " " + errorMessage);

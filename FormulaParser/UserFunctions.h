@@ -12,16 +12,19 @@ Contains descriptions of user-defined functions. To add a custom function, it ne
 
 using namespace std;
 
+/// <summary>
+/// Contains descriptions of user-defined functions. To add a custom function, it needs to be registered in `FunctionDescriptor.cpp`.
+/// </summary>
 class UserFunctions {
-	static map<string, const FunctionDescriptor*> desc;
+	static map<string, const FunctionDescriptor*> functionDescriptors;
 public:
-	static bool ContainFunctions(const string& name);
+	static bool isContainsFunctionByName(const string& functionName);
 
-	static string CheckParamNumbers(const string& name, int paramCount);
+	static string CheckParamsCount(const string& functionName, int paramCount);
 
 	static double Evaluate(const unique_ptr<TreeItem>& item);
 private:
-	static double EvaluateTreeItemValue(const string& name, const vector<unique_ptr<TreeItem>>& items);	
+	static double EvaluateTreeItemValue(const string& functionName, const vector<unique_ptr<TreeItem>>& params);
 };
 
 

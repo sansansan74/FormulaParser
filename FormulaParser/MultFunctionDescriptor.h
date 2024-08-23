@@ -1,6 +1,10 @@
 
 #pragma once
 
+/*
+Implements the multiplication operation.
+*/
+
 #include "FunctionDescriptor.h"
 
 class MultFunctionDescriptor : public FunctionDescriptor {
