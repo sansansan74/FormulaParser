@@ -14,6 +14,15 @@ using namespace std;
 
 /// <summary>
 /// Describe one user function
+///		function name
+///		
+///		parameter count:
+///			-1 - any parameters, > 0
+///			0 - zero params
+///			>0 - precise param count
+///		
+///		evaluate functions
+///			get parameters and evaluate and return function value
 /// </summary>
 class FunctionDescriptor {
 public:

@@ -7,3 +7,4 @@
 #define FUNCTION_SUBTRACT "subtract"
 #define FUNCTION_MULT "mult"
 #define FUNCTION_DIVIDE "divide"
+#define FUNCTION_FACTORIAL "factorial"

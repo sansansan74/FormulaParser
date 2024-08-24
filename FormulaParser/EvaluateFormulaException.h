@@ -4,9 +4,15 @@
 #include <exception>
 #include <string>
 
+using namespace std;
+
 class EvaluateFormulaException : public std::exception {
+    string message_;
 public:
     explicit EvaluateFormulaException(const std::string& message)
-        : std::exception(message.c_str()) {}
+        : message_(message) {
+    }
+
+    virtual char const* what() const noexcept { return message_.c_str(); }
 };
 

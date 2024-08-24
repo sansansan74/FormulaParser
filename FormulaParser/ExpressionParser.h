@@ -18,7 +18,8 @@ syntax errors, the method will throw a `ParseFormulaException`.
 
 expr ::= [+|-] sum | (expr)
 sum ::= mult {+|- mult}
-mult ::= item {*|/ item}
+mult ::= fact {*|/ fact}
+fact ::= item | item!
 item ::= double | func
 double ::= intNumber | doubleNumber
 func ::= funcName ( expr_list )
@@ -94,6 +95,8 @@ private:
 
     unique_ptr<TreeItem> ParseFactor();
 
+    unique_ptr<TreeItem> ParsePrimitive();
+
     void CheckFunctionName(const std::string& functionName) {
         if (!UserFunctions::isContainsFunctionByName(functionName))
             CreateParseFormulaException("Unexpected funcions '" + functionName + "'");
@@ -101,7 +104,7 @@ private:
     
 
     void CheckFunctionParamNumbers(const unique_ptr<TreeOperation>& treeOperation) {
-        auto errorMessage = UserFunctions::CheckParamsCount(treeOperation->GetOperation(), treeOperation->GetItems().size());
+        auto errorMessage = UserFunctions::CheckParamsCount(treeOperation->GetOperation(), (int)treeOperation->GetItems().size());
         if (!errorMessage.empty())
         {
             CreateParseFormulaException("Function " + treeOperation->GetOperation() + " " + errorMessage);

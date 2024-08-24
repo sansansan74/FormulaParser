@@ -102,6 +102,23 @@ unique_ptr<TreeItem> ExpressionParser::ParseMult() {
 }
 
 unique_ptr<TreeItem> ExpressionParser::ParseFactor() {
+    auto tree = ParsePrimitive();
+
+    if (GetTokenType() == TokenType::Operation && GetTokenValue() == "!") {
+        // create new tree operation node Factorial
+        auto function = make_unique<TreeOperation>(FUNCTION_FACTORIAL);
+        function->GetItems().push_back(move(tree));
+
+        // read next item
+        lexer_->NextToken();
+        return function;
+    }
+
+    return tree;
+}
+
+
+unique_ptr<TreeItem> ExpressionParser::ParsePrimitive() {
     // simple number 5 or 2.45
     if (GetTokenType() == TokenType::Numeric) {
         auto leaf = make_unique<TreeLeaf>(stod(GetTokenValue()));

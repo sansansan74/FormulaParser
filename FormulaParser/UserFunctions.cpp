@@ -6,6 +6,7 @@
 #include "PiFunctionDescriptor.h"
 #include "PowFunctionDescriptor.h"
 #include "SubtractFunctionDescriptor.h"
+#include "FactorialFunctionDescriptor.h"
 #include "TreeLeaf.h"
 #include "TreeOperation.h"
 #include "UserFunctions.h"
@@ -26,6 +27,7 @@ map<string, const FunctionDescriptor*> UserFunctions::functionDescriptors = {
 	{ string(FUNCTION_PI), new PiFunctionDescriptor() },
 	{ string(FUNCTION_AVG), new AvgFunctionDescriptor() },
 	{ string(FUNCTION_POW), new PowFunctionDescriptor() },
+	{ string(FUNCTION_FACTORIAL), new FactorialFunctionDescriptor() },
 
 };
 
@@ -34,15 +36,15 @@ bool UserFunctions::isContainsFunctionByName(const string& functionName) {
 		auto functionDescriptor = functionDescriptors.at(functionName);
 		return true;
 	}
-	catch (const std::out_of_range& e) {
-		false;
+	catch (const std::out_of_range& ) {
+		return false;
 	}
 }
 
 /// <summary>
 /// Check number params in functions
 /// </summary>
-/// <param name="functionName">name of function</param>
+/// <param functionName="functionName">name of function</param>
 /// <param name="paramCount">fact param count</param>
 /// <returns>error message, if error occure</returns>
 string UserFunctions::CheckParamsCount(const string& functionName, int paramCount) {
@@ -50,7 +52,7 @@ string UserFunctions::CheckParamsCount(const string& functionName, int paramCoun
 		auto functionDescriptor = functionDescriptors.at(functionName);
 		return functionDescriptor->CheckParamCount(functionName, paramCount);
 	}
-	catch (const std::out_of_range& e) {
+	catch (const std::out_of_range& ) {
 		throw EvaluateFormulaException("No such function " + functionName);
 	}
 
@@ -62,7 +64,7 @@ double UserFunctions::EvaluateTreeItemValue(const string& functionName, const ve
 		auto functionDescriptor = functionDescriptors.at(functionName);
 		return functionDescriptor->Evaluate(params);
 	}
-	catch (const std::out_of_range& e) {
+	catch (const std::out_of_range& ) {
 		throw EvaluateFormulaException("No such function " + functionName);
 	}
 }

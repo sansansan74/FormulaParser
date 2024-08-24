@@ -63,11 +63,11 @@ private:
     }
 
     static bool IsOperator(char ch) {
-        return ch == '+' || ch == '-' || ch == '*' || ch == '/';
+        return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '!';
     }
 
     static bool IsSpecial(char ch) {
-        return ch == '(' || ch == ')' || ch == ',';
+        return ch == '(' || ch == ')' || ch == ',' ;
     }
 };
 
