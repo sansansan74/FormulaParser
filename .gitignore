@@ -43,7 +43,6 @@ Makefile
 # Каталоги и файлы Visual Studio
 .vscode/
 .vs/
-*.vcxproj
 *.vcxproj.user
 *.vcxproj.filters
 *.pdb
